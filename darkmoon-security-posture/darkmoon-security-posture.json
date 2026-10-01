@@ -1,0 +1,916 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_DARKMOON_INFINITY",
+      "label": "Darkmoon (Infinity)",
+      "description": "Infinity datasource pointed at your Darkmoon API or a static findings JSON export.",
+      "type": "datasource",
+      "pluginId": "yesoreyeram-infinity-datasource",
+      "pluginName": "Infinity"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.0"
+    },
+    {
+      "type": "datasource",
+      "id": "yesoreyeram-infinity-datasource",
+      "name": "Infinity",
+      "version": "2.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "piechart",
+      "name": "Pie chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "barchart",
+      "name": "Bar chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Security-posture overview for Darkmoon autonomous AI pentest findings: severity, status, category, trends and recent campaigns. Reads the Darkmoon API (or a static findings JSON export) via the Infinity datasource.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "title": "Darkmoon on GitHub",
+      "url": "https://github.com/ASCIT31/Dark-Moon",
+      "type": "link",
+      "icon": "external link",
+      "targetBlank": true
+    },
+    {
+      "title": "Darkmoon",
+      "url": "https://dark-moon.org",
+      "type": "link",
+      "icon": "external link",
+      "targetBlank": true
+    }
+  ],
+  "panels": [
+    {
+      "id": 2,
+      "title": "Overview",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "panels": []
+    },
+    {
+      "id": 3,
+      "title": "Estate",
+      "type": "stat",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "description": "Projects, targets, campaigns and total findings across the Darkmoon estate.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/dashboard/overview.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "projects_count",
+              "text": "Projects",
+              "type": "number"
+            },
+            {
+              "selector": "targets_count",
+              "text": "Targets",
+              "type": "number"
+            },
+            {
+              "selector": "campaigns_count",
+              "text": "Campaigns",
+              "type": "number"
+            },
+            {
+              "selector": "total_vulnerabilities",
+              "text": "Findings",
+              "type": "number"
+            }
+          ],
+          "filters": [],
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#3b82f6"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "horizontal",
+        "textMode": "value_and_name",
+        "colorMode": "none",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Findings by severity",
+      "type": "piechart",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "description": "Current finding count bucketed by severity.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/dashboard/overview.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "severity_distribution.critical",
+              "text": "Critical",
+              "type": "number"
+            },
+            {
+              "selector": "severity_distribution.high",
+              "text": "High",
+              "type": "number"
+            },
+            {
+              "selector": "severity_distribution.medium",
+              "text": "Medium",
+              "type": "number"
+            },
+            {
+              "selector": "severity_distribution.low",
+              "text": "Low",
+              "type": "number"
+            },
+            {
+              "selector": "severity_distribution.info",
+              "text": "Info",
+              "type": "number"
+            }
+          ],
+          "filters": [],
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Critical"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#b02a37"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "High"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#e02f44"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Medium"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#f2a93b"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Low"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#3b82f6"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Info"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#8e8e8e"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "pieType": "donut",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Findings by status",
+      "type": "bargauge",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "description": "Finding count by confirmation status (exploited = proven with a real exploit).",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/dashboard/overview.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "status_distribution.exploited",
+              "text": "Exploited",
+              "type": "number"
+            },
+            {
+              "selector": "status_distribution.confirmed",
+              "text": "Confirmed",
+              "type": "number"
+            },
+            {
+              "selector": "status_distribution.unconfirmed",
+              "text": "Unconfirmed",
+              "type": "number"
+            },
+            {
+              "selector": "status_distribution.remediated",
+              "text": "Remediated",
+              "type": "number"
+            }
+          ],
+          "filters": [],
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "valueMode": "color",
+        "showUnfilled": true
+      }
+    },
+    {
+      "id": 6,
+      "title": "Total findings",
+      "type": "stat",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "description": "Total vulnerabilities currently tracked.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/dashboard/overview.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "total_vulnerabilities",
+              "text": "Findings",
+              "type": "number"
+            }
+          ],
+          "filters": [],
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#e02f44"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "value",
+        "colorMode": "value",
+        "graphMode": "none"
+      }
+    },
+    {
+      "id": 7,
+      "title": "Trends",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "panels": []
+    },
+    {
+      "id": 8,
+      "title": "Findings over time (by severity)",
+      "type": "timeseries",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "description": "New findings per day, split by severity (Darkmoon /metrics timeseries).",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/metrics/timeseries.severity.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "series",
+          "format": "timeseries",
+          "columns": [
+            {
+              "selector": "key",
+              "text": "severity",
+              "type": "string"
+            },
+            {
+              "selector": "points",
+              "text": "points",
+              "type": "string"
+            }
+          ],
+          "filters": [],
+          "computed_columns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "stacking": {
+              "mode": "none"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Findings by category",
+      "type": "barchart",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "description": "Finding count by vulnerability category.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/dashboard/overview.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "",
+          "columns": [
+            {
+              "selector": "category_distribution.sql_injection",
+              "text": "Sql Injection",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.xss",
+              "text": "Xss",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.broken_authentication",
+              "text": "Broken Authentication",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.misconfiguration",
+              "text": "Misconfiguration",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.broken_access_control",
+              "text": "Broken Access Control",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.information_disclosure",
+              "text": "Information Disclosure",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.remote_code_execution",
+              "text": "Remote Code Execution",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.vulnerable_component",
+              "text": "Vulnerable Component",
+              "type": "number"
+            },
+            {
+              "selector": "category_distribution.ssrf",
+              "text": "Ssrf",
+              "type": "number"
+            }
+          ],
+          "filters": [],
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "lineWidth": 1,
+            "fillOpacity": 80
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "xTickLabelRotation": 0,
+        "showValue": "auto",
+        "stacking": "none",
+        "legend": {
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "Campaigns",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "panels": []
+    },
+    {
+      "id": 11,
+      "title": "Recent campaigns",
+      "type": "table",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_DARKMOON_INFINITY}"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "description": "Most recent Darkmoon pentest campaigns with target, risk and finding count.",
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_DARKMOON_INFINITY}"
+          },
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "url": "${darkmoon_url}/api/v1/dashboard/overview.json",
+          "url_options": {
+            "method": "GET",
+            "data": ""
+          },
+          "root_selector": "recent_campaigns",
+          "columns": [
+            {
+              "selector": "campaign_id",
+              "text": "Campaign",
+              "type": "string"
+            },
+            {
+              "selector": "target",
+              "text": "Target",
+              "type": "string"
+            },
+            {
+              "selector": "date",
+              "text": "Date",
+              "type": "string"
+            },
+            {
+              "selector": "risk",
+              "text": "Risk",
+              "type": "string"
+            },
+            {
+              "selector": "findings",
+              "text": "Findings",
+              "type": "number"
+            }
+          ],
+          "filters": [],
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "filterable": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Risk"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background",
+                  "mode": "gradient"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "critical": {
+                        "color": "#b02a37",
+                        "index": 0
+                      },
+                      "high": {
+                        "color": "#e02f44",
+                        "index": 1
+                      },
+                      "medium": {
+                        "color": "#f2a93b",
+                        "index": 2
+                      },
+                      "low": {
+                        "color": "#3b82f6",
+                        "index": 3
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      }
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 39,
+  "tags": [
+    "darkmoon",
+    "security",
+    "pentest",
+    "vulnerabilities",
+    "infinity"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "DS_DARKMOON_INFINITY",
+        "options": [],
+        "query": "yesoreyeram-infinity-datasource",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "http://localhost:8080",
+          "value": "http://localhost:8080"
+        },
+        "hide": 0,
+        "label": "Darkmoon API base URL",
+        "name": "darkmoon_url",
+        "description": "Base URL of your Darkmoon API, or a folder serving static findings JSON exported by the CLI.",
+        "options": [
+          {
+            "selected": true,
+            "text": "http://localhost:8080",
+            "value": "http://localhost:8080"
+          }
+        ],
+        "query": "http://localhost:8080",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Darkmoon \u2014 Security Posture",
+  "uid": null,
+  "version": 1,
+  "weekStart": ""
+}
